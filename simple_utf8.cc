@@ -42,7 +42,6 @@ decode_next(uint32_t* state, char32_t* code, unsigned char byte) {
 
 // clang-format on
 // Code copy end.
-
 static size_t code_to_utf8(char32_t code, unsigned char* s) {
   if (code <= 0x7f) {
     s[0] = code & 0xff;
@@ -95,7 +94,7 @@ size_t simple_utf8::CountBytes(std::u32string_view p) {
 
 size_t simple_utf8::Decode(std::string_view s, std::u32string& p) {
   uint32_t state = 0;
-  char32_t code;
+  char32_t code = 0;
   size_t k = 0;
   for (auto c : s) {
     if (!decode_next(&state, &code, c)) p[k++] = code;
