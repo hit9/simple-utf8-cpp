@@ -42,6 +42,7 @@ decode_next(uint32_t* state, char32_t* code, unsigned char byte) {
 
 // clang-format on
 // Code copy end.
+
 static size_t code_to_utf8(char32_t code, unsigned char* s) {
   if (code <= 0x7f) {
     s[0] = code & 0xff;
