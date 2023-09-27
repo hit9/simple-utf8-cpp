@@ -3,20 +3,21 @@ simple-utf8-cpp
 
 Tiny simple library to convert between utf8 bytes and char32_t codepoints in C++.
 
+Reference
+---------
+
 The decoder is based on statemachine approach:
 https://bjoern.hoehrmann.de/utf-8/decoder/dfa.
 
 Requirements
 ------------
 
-No external dependencies.
-
-Requires a compiler that supports at least C++17.
+No external dependencies except a compiler that supports at least C++17.
 
 Example
 -------
 
-```simple-utf8-cpp
+```cpp
 #include <iostream>
 #include <string>
 #include "simple_utf8.h"
