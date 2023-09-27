@@ -79,7 +79,7 @@ static size_t code_bytes_size(char32_t code) {
 
 }  // namespace
 
-size_t simple_utf8::Count(std::string_view s) {
+size_t simple_utf8::CountCodes(std::string_view s) {
   size_t k = 0;
   for (auto c : s) {
     if ((c & 0xc0) != 0x80) k++;
@@ -87,7 +87,7 @@ size_t simple_utf8::Count(std::string_view s) {
   return k;
 }
 
-size_t simple_utf8::Count(std::u32string_view p) {
+size_t simple_utf8::CountBytes(std::u32string_view p) {
   size_t j = 0;
   for (auto code : p) j += code_bytes_size(code);
   return j;

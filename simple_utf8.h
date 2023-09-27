@@ -14,10 +14,10 @@ namespace simple_utf8 {
 using size_t = std::size_t;
 
 // Count codepoints in given utf8 string.
-size_t Count(std::string_view s);
+size_t CountCodes(std::string_view s);
 
 // Count bytes for given codepoint sequence.
-size_t Count(std::u32string_view p);
+size_t CountBytes(std::u32string_view p);
 
 // Decode utf8 string to codepoint buffer.
 // Returns number of codepoints decoded.
