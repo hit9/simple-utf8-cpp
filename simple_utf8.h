@@ -16,6 +16,9 @@ using size_t = std::size_t;
 // Count codepoints in given utf8 string.
 size_t Count(std::string_view s);
 
+// Count bytes for given codepoint sequence.
+size_t Count(std::u32string_view p);
+
 // Decode utf8 string to codepoint buffer.
 // Returns number of codepoints decoded.
 // Returns 0 if given utf8 string is invalid.

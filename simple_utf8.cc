@@ -69,6 +69,14 @@ static size_t code_to_utf8(char32_t code, unsigned char* s) {
   return 0;
 }
 
+static size_t code_bytes_size(char32_t code) {
+  if (code <= 0x7f) return 1;
+  if (code <= 0x7ff) return 2;
+  if (code <= 0xffff) return 3;
+  if (code <= 0x10ffff) return 4;
+  return 0;
+}
+
 }  // namespace
 
 size_t simple_utf8::Count(std::string_view s) {
@@ -77,6 +85,12 @@ size_t simple_utf8::Count(std::string_view s) {
     if ((c & 0xc0) != 0x80) k++;
   }
   return k;
+}
+
+size_t simple_utf8::Count(std::u32string_view p) {
+  size_t j = 0;
+  for (auto code : p) j += code_bytes_size(code);
+  return j;
 }
 
 size_t simple_utf8::Decode(std::string_view s, std::u32string& p) {

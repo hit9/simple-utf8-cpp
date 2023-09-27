@@ -3,14 +3,19 @@
 
 #include "simple_utf8.h"
 
-TEST_CASE("Count", "[Count simple #1]") {
+TEST_CASE("Count", "[Count codepoints simple #1]") {
   std::string s("§©Abcµ火eng\n");
   REQUIRE(simple_utf8::Count(s) == 11);
 }
 
-TEST_CASE("Count", "[Count simple #2]") {
+TEST_CASE("Count", "[Count codepoints simple #2]") {
   std::string s("ÂAÕO五6!~");
   REQUIRE(simple_utf8::Count(s) == 8);
+}
+
+TEST_CASE("Count", "[Count bytes simple #1]") {
+  std::u32string p({194, 65, 213, 79, 20116, 54, 33, 126});
+  REQUIRE(simple_utf8::Count(p) == 12);
 }
 
 TEST_CASE("Decode", "[Decode simple #1]") {
