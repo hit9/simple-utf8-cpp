@@ -7,7 +7,7 @@ project(
     "Tiny simple library to convert between utf8 bytes and char32_t codepoints in C++."
 )
 
-option(TEST "Enables testing and builds tests" OFF)
+option(SIMPLE_UTF8_TEST "Enables testing and builds tests" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_INSTALL_INCLUDEDIR include)
@@ -15,7 +15,7 @@ set(CMAKE_INSTALL_INCLUDEDIR include)
 add_library(simple_utf8 SHARED simple_utf8.cc)
 set_target_properties(simple_utf8 PROPERTIES PUBLIC_HEADER "simple_utf8.h")
 
-if(TEST)
+if(SIMPLE_UTF8_TEST)
   add_subdirectory(tests EXCLUDE_FROM_ALL)
   add_subdirectory(example EXCLUDE_FROM_ALL)
 endif()
