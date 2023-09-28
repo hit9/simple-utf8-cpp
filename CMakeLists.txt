@@ -11,6 +11,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_INSTALL_INCLUDEDIR include)
 
 add_library(simple_utf8 SHARED simple_utf8.cc)
+set_target_properties(simple_utf8 PROPERTIES PUBLIC_HEADER "simple_utf8.h")
 
-install(TARGETS simple_utf8 LIBRARY DESTINATION ${CMAK_INSTALL_LIBDIR})
-install(FILES simple_utf8.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+add_subdirectory(tests EXCLUDE_FROM_ALL)
+add_subdirectory(example EXCLUDE_FROM_ALL)
+
+install(
+  TARGETS simple_utf8
+  LIBRARY DESTINATION ${CMAK_INSTALL_LIBDIR}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

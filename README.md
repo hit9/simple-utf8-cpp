@@ -41,8 +41,8 @@ Run tests
 ---------
 
 ```
-cmake -B build/tests -S tests
-make -C build/tests
+cmake -B build -S .
+make -C build tests
 ./build/tests/tests
 ```
 
