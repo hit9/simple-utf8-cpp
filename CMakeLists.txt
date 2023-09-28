@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(
   simple_utf8
-  VERSION 1.0.2
+  VERSION 1.0.3
   DESCRIPTION
     "Tiny simple library to convert between utf8 bytes and char32_t codepoints in C++."
 )
