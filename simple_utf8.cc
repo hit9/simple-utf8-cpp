@@ -89,7 +89,8 @@ size_t simple_utf8::CountCodes(std::string_view s) {
 
 size_t simple_utf8::CountBytes(std::u32string_view p) {
   size_t j = 0;
-  for (auto code : p) j += code_bytes_size(code);
+  for (auto code : p)
+    j += code_bytes_size(code);  // cppcheck-suppress useStlAlgorithm
   return j;
 }
 

@@ -41,7 +41,7 @@ Run tests
 ---------
 
 ```
-cmake -B build -S . -DSIMPLE_UTF8_TEST
+cmake -B build -S . -DSIMPLE_UTF8_TEST=1
 make -C build tests
 ./build/tests/tests
 ```
