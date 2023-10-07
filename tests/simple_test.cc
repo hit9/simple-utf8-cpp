@@ -82,3 +82,10 @@ TEST_CASE("Encode", "[Encode simple #4]") {
   REQUIRE(k == s.size());
   REQUIRE(s == s1);
 }
+
+TEST_CASE("Decode", "[Decode invalid #1]") {
+  unsigned char x[4] = {0xF0, 0x80, 0x80, 0x8A};
+  std::string s(reinterpret_cast<char*>(x), 4);
+  std::u32string p(simple_utf8::CountCodes(s), 0);
+  REQUIRE(simple_utf8::Decode(s, p) == 0);
+}
