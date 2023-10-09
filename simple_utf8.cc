@@ -81,8 +81,8 @@ static size_t inline code_bytes_size(char32_t code) {
 
 static uint32_t inline decode_next_naive(uint32_t* state, char32_t* code,
                                          unsigned char byte) {
-  // state:
   // Ref: https://www.unicode.org/versions/corrigendum1.html
+  // states:
   // 0, starting to parse a new codepoint.
   // 8, invalid codepoint.
   // 1, wait for 1 more 80..BF
