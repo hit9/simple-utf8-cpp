@@ -9,7 +9,7 @@
 // clang-format off
 
 #define UTF8_ACCEPT 0
-#define UTF8_REJECT 4
+#define UTF8_REJECT 8
 
 namespace {
 
@@ -82,41 +82,95 @@ static size_t inline code_bytes_size(char32_t code) {
 static uint32_t inline decode_next_naive(uint32_t* state, char32_t* code,
                                          unsigned char byte) {
   // state:
-  // 1,2,3 continuation states, waiting for more bytes
-  // 0, starting to parse a new codepoint
-  // 4, current byte results invalid codepoint.
+  // Ref: https://www.unicode.org/versions/corrigendum1.html
+  // 0, starting to parse a new codepoint.
+  // 8, invalid codepoint.
+  // 1, wait for 1 more 80..BF
+  // 2, wait for 2 more 80..BF
+  // 3, wait for 3 more 80..BF
+  // 4, the first byte is E0, wait for A0..BF, next state 1
+  // 5, the first byte is F0, wait for 90..BF, next state 2
+  // 6, the first byte is F4, wait for 80..8F, next state 2
   switch (*state) {
     case UTF8_ACCEPT:
-      if (byte < 0x80) {  // 0xxxxxxx, 1st of one
+      if (byte <= 0x7f) {
+        // 0xxxxxxx, 00..7F, codepoint of 1 byte.
         *code = byte;
-      } else if (byte < 0xc0) {
-        // 10xxxxxx is invalid to be a codepoint's first byte.
+      } else if (byte < 0xc2) {
+        // 80..c1 is invlaid to be a codepoint's first byte.
         *state = UTF8_REJECT;
-      } else if (byte < 0xe0) {  // 110xxxxx, 1st of two
+      } else if (byte <= 0xdf) {
+        // 110xxxxx, c2..DF, 1st byte of two
+        // wait for 1 more 80..BF byte.
         *state = 1;
         *code = byte & 0x1f;
-      } else if (byte < 0xf0) {  // 11100000, 1st of three
+      } else if (byte == 0xe0) {
+        // wait for A0..BF
+        // 1st byte is 0xe0, total 3 bytes.
+        *state = 4;
+        *code = 0xe0 & 0xf;
+      } else if (byte <= 0xef) {
+        // 11100000, E1..EF, 1st of three
+        // wait for 2 more 80..BF bytes.
         *state = 2;
         *code = byte & 0xf;
-      } else if (byte < 0xf8) {  // 11110000, 1st of four
+      } else if (byte == 0xf0) {
+        // wait for 90..BF
+        // 1st byte is 0xf0, total 4 bytes.
+        *state = 5;
+        *code = 0xf0 & 0x7;
+      } else if (byte <= 0xf3) {
+        // 11110000, F1..F3, 1st of four
+        // wait for 3 more 80..BF bytes.
         *state = 3;
         *code = byte & 0x7;
+      } else if (byte == 0xf4) {
+        // wait for 80..8F
+        *state = 6;
+        *code = 0xf4 & 0x7;
       } else {
         *state = UTF8_REJECT;
       }
       break;
-    // Continuation.
+    // Continuation bytes:
+    // state 1,2,3: 80..BF.
+    // state 4: A0..BF
+    // state 5: 90..BF
+    // state 6: 80..8F
     case 1:
     case 2:
     case 3:
       if (byte >= 0x80 && byte <= 0xbf) {
-        // 10xxxxxx, still a continuation byte
-        // count of bytes to wait should -= 1
         *state -= 1;
         *code = (*code << 6) | (byte & 0x3f);
       } else {
         *state = UTF8_REJECT;
       }
+      break;
+    case 4:
+      if (byte >= 0xa0 && byte <= 0xbf) {
+        *state = 1;
+        *code = (*code << 6) | (byte & 0x3f);
+      } else {
+        *state = UTF8_REJECT;
+      }
+      break;
+    case 5:
+      if (byte >= 0x90 && byte <= 0xbf) {
+        *state = 2;
+        *code = (*code << 6) | (byte & 0x3f);
+      } else {
+        *state = UTF8_REJECT;
+      }
+      break;
+    case 6:
+      if (byte >= 0x80 && byte <= 0x8f) {
+        *state = 2;
+        *code = (*code << 6) | (byte & 0x3f);
+      } else {
+        *state = UTF8_REJECT;
+      }
+      break;
   }
   return *state;
 }
