@@ -1,5 +1,7 @@
 #include "simple_utf8.h"
 
+// rfc3629 https://datatracker.ietf.org/doc/html/rfc3629
+
 // Code copy from http://bjoern.hoehrmann.de/utf-8/decoder/dfa.
 // Copyright (c) 2008-2009 Bjoern Hoehrmann <bjoern@hoehrmann.de>
 // See http://bjoern.hoehrmann.de/utf-8/decoder/dfa/ for details.
@@ -7,7 +9,7 @@
 // clang-format off
 
 #define UTF8_ACCEPT 0
-#define UTF8_REJECT 1
+#define UTF8_REJECT 4
 
 namespace {
 
@@ -43,8 +45,8 @@ decode_next(uint32_t* state, char32_t* code, unsigned char byte) {
 // clang-format on
 // Code copy end.
 
-static size_t code_to_utf8(char32_t code, unsigned char* s) {
-  if (code <= 0x7f) {
+static size_t inline code_to_utf8(char32_t code, unsigned char* s) {
+  if (code <= 0x7f) {  // 0xxxxxxx
     s[0] = code & 0xff;
     return 1;
   }
@@ -69,7 +71,7 @@ static size_t code_to_utf8(char32_t code, unsigned char* s) {
   return 0;
 }
 
-static size_t code_bytes_size(char32_t code) {
+static size_t inline code_bytes_size(char32_t code) {
   if (code <= 0x7f) return 1;
   if (code <= 0x7ff) return 2;
   if (code <= 0xffff) return 3;
@@ -77,6 +79,47 @@ static size_t code_bytes_size(char32_t code) {
   return 0;
 }
 
+static uint32_t inline decode_next_naive(uint32_t* state, char32_t* code,
+                                         unsigned char byte) {
+  // state:
+  // 1,2,3 continuation states, waiting for more bytes
+  // 0, starting to parse a new codepoint
+  // 4, current byte results invalid codepoint.
+  switch (*state) {
+    case UTF8_ACCEPT:
+      if (byte < 0x80) {  // 0xxxxxxx, 1st of one
+        *code = byte;
+      } else if (byte < 0xc0) {
+        // 10xxxxxx is invalid to be a codepoint's first byte.
+        *state = UTF8_REJECT;
+      } else if (byte < 0xe0) {  // 110xxxxx, 1st of two
+        *state = 1;
+        *code = byte & 0x1f;
+      } else if (byte < 0xf0) {  // 11100000, 1st of three
+        *state = 2;
+        *code = byte & 0xf;
+      } else if (byte < 0xf8) {  // 11110000, 1st of four
+        *state = 3;
+        *code = byte & 0x7;
+      } else {
+        *state = UTF8_REJECT;
+      }
+      break;
+    // Continuation.
+    case 1:
+    case 2:
+    case 3:
+      if (byte >= 0x80 && byte <= 0xbf) {
+        // 10xxxxxx, still a continuation byte
+        // count of bytes to wait should -= 1
+        *state -= 1;
+        *code = (*code << 6) | (byte & 0x3f);
+      } else {
+        *state = UTF8_REJECT;
+      }
+  }
+  return *state;
+}
 }  // namespace
 
 size_t simple_utf8::CountCodes(std::string_view s) {
@@ -99,7 +142,9 @@ size_t simple_utf8::Decode(std::string_view s, std::u32string& p) {
   char32_t code = 0;
   size_t k = 0;
   for (auto c : s) {
-    if (!decode_next(&state, &code, c)) p[k++] = code;
+    decode_next(&state, &code, c);
+    if (state == UTF8_REJECT) return 0;  // early fail.
+    if (state == UTF8_ACCEPT) p[k++] = code;
   }
   if (state != UTF8_ACCEPT) return 0;
   return k;
@@ -113,4 +158,17 @@ size_t simple_utf8::Encode(std::u32string_view p, std::string& s) {
     j += d;
   }
   return j;
+}
+
+size_t simple_utf8::DecodeNaive(std::string_view s, std::u32string& p) {
+  uint32_t state = 0;
+  char32_t code = 0;
+  size_t k = 0;
+  for (auto c : s) {
+    decode_next_naive(&state, &code, c);
+    if (state == UTF8_REJECT) return 0;  // early fail.
+    if (state == UTF8_ACCEPT) p[k++] = code;
+  }
+  if (state != UTF8_ACCEPT) return 0;
+  return k;
 }

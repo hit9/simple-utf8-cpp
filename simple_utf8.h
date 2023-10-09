@@ -19,10 +19,15 @@ size_t CountCodes(std::string_view s);
 // Count bytes for given codepoint sequence.
 size_t CountBytes(std::u32string_view p);
 
-// Decode utf8 string to codepoint buffer.
+// Decode utf8 string to codepoint buffer via Bjoern Hoehrmann DFA approach.
 // Returns number of codepoints decoded.
 // Returns 0 if given utf8 string is invalid.
 size_t Decode(std::string_view s, std::u32string &p);
+
+// Decode utf8 string to codepoint buffer via naive traditional approach.
+// Returns number of codepoints decoded.
+// Returns 0 if given utf8 string is invalid.
+size_t DecodeNaive(std::string_view s, std::u32string &p);
 
 // Encode codepoint buffer to utf8 string.
 // Returns number of chars encoded.
