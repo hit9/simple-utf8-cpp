@@ -7,7 +7,7 @@ Reference
 ---------
 
 - The default decoder function `Decode` is based on statemachine approach: https://bjoern.hoehrmann.de/utf-8/decoder/dfa.
-- There's also a naive approach decoder function: `DecodeNaive`.
+- I also implemented a naive approach decoder function: `DecodeNaive`, which seems to be a little faster. [benchmark](#benchmark).
 - [rfc3629 - UTF-8](https://datatracker.ietf.org/doc/html/rfc3629)
 
 Requirements
@@ -50,6 +50,35 @@ Run tests
 cmake -B build -S . -DSIMPLE_UTF8_TEST=1
 make -C build tests
 ./build/tests/tests
+```
+
+Benchmark
+---------
+
+How to run benchmark:
+
+```
+cmake -B build -S . -DSIMPLE_UTF8_TEST=1
+make -C build benchmark
+./build/tests/benchmark
+```
+
+Benchmark results on my computer for random utf8 string
+[UTF-8-random-1.txt](tests/data/UTF-8-random-1.txt):
+
+```
+benchmark name                       samples       iterations    estimated
+                                     mean          low mean      high mean
+                                     std dev       low std dev   high std dev
+-------------------------------------------------------------------------------
+Decode benchmark (random)                      100             1    29.1183 ms
+                                        290.334 us    288.784 us    293.289 us
+                                        10.5697 us    6.32333 us    16.5749 us
+
+DecodeNaive benchmark (random)                 100             1    29.1823 ms
+                                        288.386 us    285.644 us    293.052 us
+                                        17.8809 us    11.8848 us    25.5662 us
+
 ```
 
 License

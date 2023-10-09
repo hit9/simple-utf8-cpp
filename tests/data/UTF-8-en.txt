@@ -1,0 +1,94 @@
+UTF-8 is a variable-length character encoding standard used for electronic communication. Defined by the Unicode Standard, the name is derived from Unicode (or Universal Coded Character Set) Transformation Format – 8-bit.[1]
+
+UTF-8 is capable of encoding all 1,112,064[a] valid character code points in Unicode using one to four one-byte (8-bit) code units. Code points with lower numerical values, which tend to occur more frequently, are encoded using fewer bytes. It was designed for backward compatibility with ASCII: the first 128 characters of Unicode, which correspond one-to-one with ASCII, are encoded using a single byte with the same binary value as ASCII, so that valid ASCII text is valid UTF-8-encoded Unicode as well.
+
+UTF-8 was designed as a superior alternative to UTF-1, a proposed variable-length encoding with partial ASCII compatibility which lacked some features including self-synchronization and fully ASCII-compatible handling of characters such as slashes. Ken Thompson and Rob Pike produced the first implementation for the Plan 9 operating system in September 1992.[2][3] This led to its adoption by X/Open as its specification for FSS-UTF,[4] which would first be officially presented at USENIX in January 1993[5] and subsequently adopted by the Internet Engineering Task Force (IETF) in RFC 2277 (BCP 18)[6] for future internet standards work, replacing Single Byte Character Sets such as Latin-1 in older RFCs.
+
+UTF-8 results in fewer internationalization issues[7][8] than any alternative text encoding, and it has been implemented in all modern operating systems, including Microsoft Windows, and standards such as JSON, where, as is increasingly the case, it is the only allowed form of Unicode.
+
+UTF-8 is the dominant encoding for the World Wide Web (and internet technologies), accounting for 98.0% of all web pages, 99.0% of the top 10,000 pages, and up to 100% for many languages, as of 2023.[9] Virtually all countries and languages have 95% or more use of UTF-8 encodings on the web. 
+
+The official name for the encoding is UTF-8, the spelling used in all Unicode Consortium documents. Most standards officially list it in upper case as well, but all that do are also case-insensitive and utf-8 is often used in code.[citation needed]
+
+Some other spellings may also be accepted by standards, e.g. web standards (which include CSS, HTML, XML, and HTTP headers) explicitly allow utf8 (and disallow "unicode") and many aliases for encodings.[10] Spellings with a space e.g. "UTF 8" should not be used. The official Internet Assigned Numbers Authority also lists csUTF8 as the only alias,[11] which is rarely used.
+
+In Windows, UTF-8 is codepage 65001[12] (i.e. CP_UTF8 in source code).
+
+In MySQL, UTF-8 is called utf8mb4[13] (with utf8mb3, and its alias utf8, being a subset encoding for characters in the Basic Multilingual Plane[14]). In HP PCL, the Symbol-ID for UTF-8 is 18N.[15]
+
+In Oracle Database (since version 9.0), AL32UTF8[16] means UTF-8. See also CESU-8 for an almost synonym with UTF-8 that rarely should be used.
+
+UTF-8-BOM and UTF-8-NOBOM are sometimes used for text files which contain or do not contain a byte order mark (BOM), respectively.[citation needed] In Japan especially, UTF-8 encoding without a BOM is sometimes called UTF-8N.[17][18]
+
+The first 128 code points (ASCII) need one byte. The next 1,920 code points need two bytes to encode, which covers the remainder of almost all Latin-script alphabets, and also IPA extensions, Greek, Cyrillic, Coptic, Armenian, Hebrew, Arabic, Syriac, Thaana and N'Ko alphabets, as well as Combining Diacritical Marks. Three bytes are needed for the remaining 61,440 code points of the Basic Multilingual Plane (BMP), including most Chinese, Japanese and Korean characters. Four bytes are needed for the 1,048,576 code points in the other planes of Unicode, which include emoji (pictographic symbols), less common CJK characters, various historic scripts, and mathematical symbols.
+
+A "character" can take more than 4 bytes because it is made of more than one code point. For instance a national flag character takes 8 bytes since it is "constructed from a pair of Unicode scalar values" both from outside the BMP.[19][c]
+Encoding process
+
+In these examples, red, green, and blue digits indicate how bits from the code point are distributed among the UTF-8 bytes. Additional bits added by the UTF-8 encoding process are shown in black.
+
+    The Unicode code point for the euro sign € is U+20AC.
+    As this code point lies between U+0800 and U+FFFF, this will take three bytes to encode.
+    Hexadecimal 20AC is binary 0010 0000 1010 1100. The two leading zeros are added because a three-byte encoding needs exactly sixteen bits from the code point.
+    Because the encoding will be three bytes long, its leading byte starts with three 1s, then a 0 (1110...)
+    The four most significant bits of the code point are stored in the remaining low order four bits of this byte (11100010), leaving 12 bits of the code point yet to be encoded (...0000 1010 1100).
+    All continuation bytes contain exactly six bits from the code point. So the next six bits of the code point are stored in the low order six bits of the next byte, and 10 is stored in the high order two bits to mark it as a continuation byte (so 10000010).
+    Finally the last six bits of the code point are stored in the low order six bits of the final byte, and again 10 is stored in the high order two bits (10101100).
+
+The three bytes 11100010 10000010 10101100 can be more concisely written in hexadecimal, as E2 82 AC.
+
+The following table summarizes this conversion, as well as others with different lengths in UTF-8.
+
+The following table summarizes usage of UTF-8 code units (individual bytes or octets) in a code page format. The upper half is for bytes used only in single-byte codes, so it looks like a normal code page; the lower half is for continuation bytes and leading bytes and is explained further in the legend below.
+
+7-bit (single-byte) code points. They must not be followed by a continuation byte.[20]
+  Continuation bytes.[21] The cell shows in hexadecimal the value of the 6 bits they add.[d]
+  Leading bytes for a sequence of multiple bytes, must be followed by exactly N−1 continuation bytes.[22] The tooltip shows the code point range and the Unicode blocks encoded by sequences starting with this byte.
+  Leading bytes where not all arrangements of continuation bytes are valid. E0 and F0 could start overlong encodings. F4 can start code points greater than U+10FFFF. ED can start code points in the range U+D800–U+DFFF, which are invalid UTF-16 surrogate halves.[23]
+  Do not appear in a valid UTF-8 sequence. C0 and C1 could be used only for an "overlong" encoding of a 1-byte character.[24] F5 to FD are leading bytes of 4-byte or longer sequences that can only encode code points larger than U+10FFFF.[23] FE and FF were never assigned any meaning.[25]
+Overlong encodings
+
+In principle, it would be possible to inflate the number of bytes in an encoding by padding the code point with leading 0s. To encode the euro sign € from the above example in four bytes instead of three, it could be padded with leading 0s until it was 21 bits long – 000 000010 000010 101100, and encoded as 11110000 10000010 10000010 10101100 (or F0 82 82 AC in hexadecimal). This is called an overlong encoding.
+
+The standard specifies that the correct encoding of a code point uses only the minimum number of bytes required to hold the significant bits of the code point. Longer encodings are called overlong and are not valid UTF-8 representations of the code point. This rule maintains a one-to-one correspondence between code points and their valid encodings, so that there is a unique valid encoding for each code point. This ensures that string comparisons and searches are well-defined.
+Invalid sequences and error handling
+
+Not all sequences of bytes are valid UTF-8. A UTF-8 decoder should be prepared for:
+
+    invalid bytes
+    an unexpected continuation byte
+    a non-continuation byte before the end of the character
+    the string ending before the end of the character (which can happen in simple string truncation)
+    an overlong encoding
+    a sequence that decodes to an invalid code point
+
+Many of the first UTF-8 decoders would decode these, ignoring incorrect bits and accepting overlong results. Carefully crafted invalid UTF-8 could make them either skip or create ASCII characters such as NUL, slash, or quotes. Invalid UTF-8 has been used to bypass security validations in high-profile products including Microsoft's IIS web server[26] and Apache's Tomcat servlet container.[27] RFC 3629 states "Implementations of the decoding algorithm MUST protect against decoding invalid sequences."[23] The Unicode Standard requires decoders to "...treat any ill-formed code unit sequence as an error condition. This guarantees that it will neither interpret nor emit an ill-formed code unit sequence."
+
+Since RFC 3629 (November 2003), the high and low surrogate halves used by UTF-16 (U+D800 through U+DFFF) and code points not encodable by UTF-16 (those after U+10FFFF) are not legal Unicode values, and their UTF-8 encoding must be treated as an invalid byte sequence. Not decoding unpaired surrogate halves makes it impossible to store invalid UTF-16 (such as Windows filenames or UTF-16 that has been split between the surrogates) as UTF-8,[28] while it is possible with WTF-8.
+
+Some implementations of decoders throw exceptions on errors.[29] This has the disadvantage that it can turn what would otherwise be harmless errors (such as a "no such file" error) into a denial of service. For instance early versions of Python 3.0 would exit immediately if the command line or environment variables contained invalid UTF-8.[30]
+
+Since Unicode 6[31] (October 2010), the standard (chapter 3) has recommended a "best practice" where the error is either one byte long, or ends before the first byte that is disallowed. In these decoders E1,A0,C0 is two errors (2 bytes in the first one). This means an error is no more than three bytes long and never contains the start of a valid character, and there are 21,952 different possible errors.[32] The standard also recommends replacing each error with the replacement character "�" (U+FFFD).
+
+These recommendations are not often followed. It is common to consider each byte to be an error, in which case E1,A0,C0 is three errors (each 1 byte long). This means there are only 128 different errors, and it is also common to replace them with 128 different characters, to make the decoding "lossless".[33]
+Byte order mark
+
+If the Unicode byte order mark (BOM, U+FEFF) character is at the start of a UTF-8 file, the first three bytes will be 0xEF, 0xBB, 0xBF.
+
+The Unicode Standard neither requires nor recommends the use of the BOM for UTF-8, but warns that it may be encountered at the start of a file trans-coded from another encoding.[34] While ASCII text encoded using UTF-8 is backward compatible with ASCII, this is not true when Unicode Standard recommendations are ignored and a BOM is added. A BOM can confuse software that isn't prepared for it but can otherwise accept UTF-8, e.g. programming languages that permit non-ASCII bytes in string literals but not at the start of the file. Nevertheless, there was and still is software that always inserts a BOM when writing UTF-8, and refuses to correctly interpret UTF-8 unless the first character is a BOM (or the file only contains ASCII).[35]
+
+UTF-8 has been the most common encoding for the World Wide Web since 2008.[37] As of October 2023, UTF-8 is used by 98.0% of surveyed web sites.[9][e] Although many pages only use ASCII characters to display content, few websites now declare their encoding to only be ASCII instead of UTF-8.[38] Over 50% of the languages tracked have 100% UTF-8 use.
+
+Many standards only support UTF-8, e.g. JSON exchange requires it (without a byte order mark (BOM)).[39] UTF-8 is also the recommendation from the WHATWG for HTML and DOM specifications, and stating "UTF-8 encoding is the most appropriate encoding for interchange of Unicode"[8] and the Internet Mail Consortium recommends that all e‑mail programs be able to display and create mail using UTF-8.[40][41] The World Wide Web Consortium recommends UTF-8 as the default encoding in XML and HTML (and not just using UTF-8, also declaring it in metadata), "even when all characters are in the ASCII range ... Using non-UTF-8 encodings can have unexpected results".[42]
+
+Lots of software has the ability to read/write UTF-8. It may though require the user to change options from the normal settings, or may require a BOM (byte order mark) as the first character to read the file. Examples of software supporting UTF-8 include Microsoft Word,[43][44][45] Microsoft Excel (2016 and later),[46][47] Google Drive, LibreOffice and most databases.
+
+However for local text files UTF-8 usage is less prevalent, where legacy single-byte (and a few CJK multi-byte) encodings remain in use. The primary cause for this are outdated text editors that refuse to read UTF-8 unless the first bytes of the file encode a byte order mark character (BOM).[48]
+
+Some recent software can only read and write UTF-8 or at least do not require a BOM.[49] Windows Notepad, in all currently supported versions of Windows, defaults to writing UTF-8 without a BOM (a change from the outdated/unsupported Windows 7), bringing it into line with most other text editors.[50] Some system files on Windows 11 require UTF-8[51] with no requirement for a BOM, and almost all files on macOS and Linux are required to be UTF-8 without a BOM.[citation needed] Java 18 defaults to reading and writing files as UTF-8,[52] and in older versions (e.g. LTS versions) only the NIO API was changed to do so. Many other programming languages default to UTF-8 for I/O, including Ruby 3.0[53][54] and R 4.2.2.[55] All currently supported versions of Python support UTF-8 for I/O, even on Windows (where it is opt-in for the open() function[56]), and plans exist to make UTF-8 I/O the default in Python 3.15 on all platforms.[57][58] C++23 adopts UTF-8 as the only portable source code file format (surprisingly there was none before).[59]
+
+Usage of UTF-8 in memory is much lower than in other areas, UTF-16 is often used instead. This occurs particularly in Windows, but also in JavaScript, Python,[f] Qt, and many other cross-platform software libraries. Compatibility with the Windows API is the primary reason for this, that choice was initially done due to the belief that direct indexing of the BMP would improve speed. Translating from/to external text which is in UTF-8 slows software down, and more importantly introduces bugs when different pieces of code do not do the exact same translation.
+
+Back-compatibility is a serious impediment to changing code to use UTF-8 instead of a 16-bit encoding, but this is happening. The default string primitive in Go,[61] Julia, Rust, Swift 5,[62] and PyPy[63] uses UTF-8 internally in all cases, while Python, since Python 3.3, uses UTF-8 internally in some cases (for Python C API extensions);[60][64] a future version of Python is planned to store strings as UTF-8 by default;[65][66] and modern versions of Microsoft Visual Studio use UTF-8 internally.[67] Microsoft's SQL Server 2019 added support for UTF-8, and using it results in a 35% speed increase, and "nearly 50% reduction in storage requirements."[68]
+
+All currently supported Windows versions support UTF-8 in some way (including Xbox);[7] partial support has existed since at least Windows XP. As of May 2019, Microsoft has reversed its previous position of only recommending UTF-16; the capability to set UTF-8 as the "code page" for the Windows API was introduced; and Microsoft recommends programmers use UTF-8,[69] and even states "UTF-16 [..] is a unique burden that Windows places on code that targets multiple platforms."[7] 
