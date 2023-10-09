@@ -3,6 +3,8 @@ simple-utf8-cpp
 
 Tiny simple library to convert between utf8 bytes and char32_t codepoints in C++.
 
+[![simple-utf8-cpp tests](https://github.com/hit9/simple-utf8-cpp/actions/workflows/tests.yml/badge.svg)](https://github.com/hit9/simple-utf8-cpp/actions/workflows/tests.yml)
+
 Reference
 ---------
 
