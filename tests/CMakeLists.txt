@@ -4,6 +4,8 @@ project(simple_utf8_tests CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+enable_testing()
+
 include_directories("..")
 
 # Find or Download package Catch 2
