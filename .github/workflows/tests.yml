@@ -45,5 +45,5 @@ jobs:
         -DSIMPLE_UTF8_TEST=1
 
     - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      working-directory: ${{runner.workspace}}/build
       run: cmake --build . --config ${{ matrix.build_type }} --target runtests
