@@ -48,8 +48,7 @@ Run tests
 
 ```
 cmake -B build -S . -DSIMPLE_UTF8_TEST=1
-make -C build tests
-./build/tests/tests
+cmake --build build --target runtests
 ```
 
 Benchmark
@@ -59,8 +58,7 @@ How to run benchmark:
 
 ```
 cmake -B build -S . -DSIMPLE_UTF8_TEST=1
-make -C build benchmark
-./build/tests/benchmark
+cmake --build build --target runbenchmark
 ```
 
 Benchmark results on my computer for random utf8 string
