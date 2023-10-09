@@ -56,6 +56,20 @@ TEST_CASE("Decode", "[Decode invalid #1]") {
   REQUIRE(simple_utf8::Decode(s, p) == 0);
 }
 
+TEST_CASE("Decode", "[Decode invalid #2]") {
+  unsigned char x[2] = {0xC1, 0x80};
+  std::string s(reinterpret_cast<char*>(x), 2);
+  std::u32string p(simple_utf8::CountCodes(s), 0);
+  REQUIRE(simple_utf8::Decode(s, p) == 0);
+}
+
+TEST_CASE("Decode", "[Decode invalid #3]") {
+  unsigned char x[4] = {0xF4, 0x90, 0x80, 0x80};
+  std::string s(reinterpret_cast<char*>(x), 4);
+  std::u32string p(simple_utf8::CountCodes(s), 0);
+  REQUIRE(simple_utf8::Decode(s, p) == 0);
+}
+
 TEST_CASE("DecodeNaive", "[DecodeNaive simple #1]") {
   std::string s("english and 中文混合");
   std::u32string p(simple_utf8::CountCodes(s), 0);
@@ -124,6 +138,21 @@ TEST_CASE("DecodeNaive", "[DecodeNaive invalid #1]") {
   std::u32string p(simple_utf8::CountCodes(s), 0);
   REQUIRE(simple_utf8::DecodeNaive(s, p) == 0);
 }
+
+TEST_CASE("DecodeNaive", "[DecodeNaive invalid #2]") {
+  unsigned char x[2] = {0xC1, 0x80};
+  std::string s(reinterpret_cast<char*>(x), 2);
+  std::u32string p(simple_utf8::CountCodes(s), 0);
+  REQUIRE(simple_utf8::DecodeNaive(s, p) == 0);
+}
+
+TEST_CASE("DecodeNaive", "[DecodeNaive invalid #3]") {
+  unsigned char x[4] = {0xF4, 0x90, 0x80, 0x80};
+  std::string s(reinterpret_cast<char*>(x), 4);
+  std::u32string p(simple_utf8::CountCodes(s), 0);
+  REQUIRE(simple_utf8::DecodeNaive(s, p) == 0);
+}
+
 /// Decode }}}
 
 /// {{{ Encode
