@@ -1,5 +1,7 @@
 #include "simple_utf8.h"
 
+#include <cstdint> // for uint32_t
+
 // rfc3629 https://datatracker.ietf.org/doc/html/rfc3629
 
 // Code copy from http://bjoern.hoehrmann.de/utf-8/decoder/dfa.

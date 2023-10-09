@@ -5,9 +5,9 @@
 #ifndef HIT9_SIMPLE_UTF8_H_
 #define HIT9_SIMPLE_UTF8_H_
 
-#include <cstddef>
-#include <string>
-#include <string_view>
+#include <cstddef>      // for std::size_t
+#include <string>       // for std::string, std::u32string
+#include <string_view>  // for std::string_view, std::u32string_view
 
 namespace simple_utf8 {
 
