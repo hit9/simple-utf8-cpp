@@ -3,7 +3,7 @@
 
 namespace simple_utf8_test_util {
 
-std::u32string ReadCodepointsFromFile(std::string_view filename) {
+std::u32string ReadCodepointsFromFile(const std::string& filename) {
   // read file
   std::string s;
   std::getline(std::ifstream(filename), s, '\0');
@@ -36,7 +36,7 @@ std::u32string ReadCodepointsFromFile(std::string_view filename) {
   return codepoints;
 }
 
-std::string ReadFile(std::string_view filename) {
+std::string ReadFile(const std::string& filename) {
   std::string s;
   std::getline(std::ifstream(filename), s, '\0');
   return s;
