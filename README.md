@@ -51,6 +51,14 @@ cmake -B build -S . -DSIMPLE_UTF8_TEST=1
 cmake --build build --target runtests
 ```
 
+OR using `ctest`:
+
+```
+cmake -B build -S . -DSIMPLE_UTF8_TEST=1
+cmake --build build --target tests
+ctest --test-dir ./build/tests
+```
+
 Benchmark
 ---------
 

@@ -46,3 +46,5 @@ add_custom_target(
   COMMAND benchmark
   DEPENDS benchmark
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+add_test(NAME tests COMMAND ${CMAKE_CURRENT_BINARY_DIR}/tests)
