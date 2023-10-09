@@ -6,8 +6,9 @@ Tiny simple library to convert between utf8 bytes and char32_t codepoints in C++
 Reference
 ---------
 
-The decoder is based on statemachine approach:
-https://bjoern.hoehrmann.de/utf-8/decoder/dfa.
+- The default decoder function `Decode` is based on statemachine approach: https://bjoern.hoehrmann.de/utf-8/decoder/dfa.
+- There's also a naive approach decoder function: `DecodeNaive`.
+- [rfc3629 - UTF-8](https://datatracker.ietf.org/doc/html/rfc3629)
 
 Requirements
 ------------
