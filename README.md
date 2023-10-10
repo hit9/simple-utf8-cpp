@@ -71,7 +71,7 @@ cmake -B build -S . -DSIMPLE_UTF8_TEST=1
 cmake --build build --target runbenchmark
 ```
 
-Benchmark results on my computer for random utf8 string
+Benchmark results on my computer for a 24KB random utf8 string
 [UTF-8-random-1.txt](tests/data/UTF-8-random-1.txt):
 
 ```
