@@ -15,6 +15,7 @@ jobs:
 
       matrix:
         build_type: [Debug]
+        os: [macos-latest, ubuntu-latest]
         include:
           - os: ubuntu-latest
             c_compiler: gcc
