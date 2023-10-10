@@ -16,7 +16,7 @@ jobs:
       matrix:
         build_type: [Debug]
         os: [macos-latest, ubuntu-latest]
-        c_compiler: [gcc, clang]
+        cpp_compiler: [g++, clang++]
         include:
           - os: ubuntu-latest
             c_compiler: gcc
@@ -27,6 +27,9 @@ jobs:
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
+        exclude:
+          - os: macos-latest
+            cpp_compiler: g++
           # - os: windows-latest
           #   c_compiler: cl
           #   cpp_compiler: cl
