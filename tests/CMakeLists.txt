@@ -19,6 +19,7 @@ FetchContent_Declare(
   FIND_PACKAGE_ARGS NAMES Catch2)
 
 FetchContent_MakeAvailable(Catch2)
+list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 
 # Targets
 file(GLOB TEST_SOURCES *_test.cc)
@@ -47,4 +48,6 @@ add_custom_target(
   DEPENDS benchmark
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-add_test(NAME tests COMMAND ${CMAKE_CURRENT_BINARY_DIR}/tests)
+include(CTest)
+include(Catch)
+catch_discover_tests(tests)
