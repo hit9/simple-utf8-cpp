@@ -1,6 +1,6 @@
 #include "simple_utf8.h"
 
-#include <cstdint> // for uint32_t
+#include <cstdint>  // for uint32_t
 
 // rfc3629 https://datatracker.ietf.org/doc/html/rfc3629
 
@@ -140,7 +140,9 @@ static uint32_t inline decode_next_naive(uint32_t* state, char32_t* code,
     // state 5: 90..BF
     // state 6: 80..8F
     case 1:
+      [[fallthrough]];
     case 2:
+      [[fallthrough]];
     case 3:
       if (byte >= 0x80 && byte <= 0xbf) {
         *state -= 1;
