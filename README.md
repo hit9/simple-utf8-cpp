@@ -48,6 +48,14 @@ int main() {
 Run tests
 ---------
 
+Install Catch2 via conan (optional, or cmake will download it automatically if missing):
+
+```
+conan install . --output-folder=build --build=missing
+```
+
+Run tests:
+
 ```
 cmake -B build -S . -DSIMPLE_UTF8_TEST=1
 cmake --build build --target runtests
