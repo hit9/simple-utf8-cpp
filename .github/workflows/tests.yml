@@ -26,7 +26,7 @@ jobs:
             cpp_compiler: clang++
         exclude:
           - os: macos-latest
-            cpp_compiler: g++
+            cpp_compiler: g++-13
           - os: ubuntu-latest
             cpp_compiler: clang++
           # - os: windows-latest
