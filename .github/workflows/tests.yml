@@ -14,22 +14,22 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [Debug]
+        build_type: [Debug, Release]
         os: [macos-latest, ubuntu-latest]
         cpp_compiler: [g++, clang++]
         include:
           - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
+            c_compiler: gcc-13
+            cpp_compiler: g++-13
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
         exclude:
           - os: macos-latest
             cpp_compiler: g++
+          - os: ubuntu-latest
+            c_compiler: clang
+            cpp_compiler: clang++
           # - os: windows-latest
           #   c_compiler: cl
           #   cpp_compiler: cl
@@ -37,18 +37,36 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install Conan
+      run: pip install conan
+
+    - name: Configure Conan
+      run: conan profile detect
+
+    - name: Install Requirements
+      run: >
+        conan install .
+        --output-folder=${{ runner.workspace }}/build
+        --build=missing -s compiler.cppstd=20
+        -s build_type=${{ matrix.build_type }}
+
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/build
       run: >
-        cmake -B . -S ${{ github.workspace }}
+        cmake -B ${{ runner.workspace }}/build  -S ${{ github.workspace }}
+        -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DSIMPLE_UTF8_TEST=1
 
-    - name: Test
+    - name: Run Tests
+      working-directory: ${{runner.workspace}}/build/tests
+      run: make run-tests
+
+    - name: Run Benchmark
       working-directory: ${{runner.workspace}}/build
-      run: cmake --build . --config ${{ matrix.build_type }} --target runtests
+      run: make run-benchmark
