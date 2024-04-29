@@ -62,9 +62,9 @@ jobs:
         -DSIMPLE_UTF8_TEST=1
 
     - name: Run Tests
-      working-directory: ${{runner.workspace}}/build/tests
+      working-directory: ${{runner.workspace}}
       run: make run-tests
 
     - name: Run Benchmark
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}
       run: make run-benchmark
