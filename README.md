@@ -66,8 +66,10 @@ Benchmark
 
 How to run benchmark:
 
-```
-make cmake-build-test
+```bash
+rm -rf build
+make install-release
+make cmake-build-test-release-mode
 make run-benchmark
 ```
 
