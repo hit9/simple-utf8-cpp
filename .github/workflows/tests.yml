@@ -19,19 +19,15 @@ jobs:
         cpp_compiler: [g++, clang++]
         include:
           - os: ubuntu-latest
-            c_compiler: gcc-13
             cpp_compiler: g++-13
           - os: macos-latest
-            c_compiler: clang
             cpp_compiler: clang++
         exclude:
           - os: macos-latest
             cpp_compiler: g++
           - os: ubuntu-latest
-            c_compiler: clang
             cpp_compiler: clang++
           # - os: windows-latest
-          #   c_compiler: cl
           #   cpp_compiler: cl
 
     steps:
