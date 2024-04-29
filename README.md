@@ -72,21 +72,20 @@ make run-benchmark
 ```
 
 Benchmark results on my computer for a 24KB random utf8 string
-[UTF-8-random-1.txt](tests/data/UTF-8-random-1.txt):
+[UTF-8-random-1.txt](tests/data/UTF-8-random-1.txt), [benchmark on action](https://github.com/hit9/simple-utf8-cpp/actions/runs/8875970118/job/24366540231)
 
 ```
-benchmark name                       samples       iterations    estimated
+ benchmark name                       samples       iterations    est run time
                                      mean          low mean      high mean
                                      std dev       low std dev   high std dev
 -------------------------------------------------------------------------------
-Decode benchmark (random)                      100             1    29.1183 ms
-                                        290.334 us    288.784 us    293.289 us
-                                        10.5697 us    6.32333 us    16.5749 us
+Decode benchmark (random)                      100             1     5.6547 ms
+                                        58.3573 us    57.9402 us    59.1934 us
+                                        2.89185 us     1.6351 us    4.63128 us
 
-DecodeNaive benchmark (random)                 100             1    29.1823 ms
-                                        288.386 us    285.644 us    293.052 us
-                                        17.8809 us    11.8848 us    25.5662 us
-
+DecodeNaive benchmark (random)                 100             2     3.5126 ms
+                                        16.0734 us    15.7466 us    16.9565 us
+                                        2.53024 us    1.14389 us    5.37552 us
 ```
 
 Links
