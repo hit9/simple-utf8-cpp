@@ -52,7 +52,7 @@ jobs:
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}
       run: >
         cmake -B ${{ runner.workspace }}/build  -S ${{ github.workspace }}
         -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
@@ -62,9 +62,9 @@ jobs:
         -DSIMPLE_UTF8_TEST=1
 
     - name: Run Tests
-      working-directory: ${{runner.workspace}}
-      run: make run-tests
+      working-directory: ${{runner.workspace}}/build/tests
+      run: make tests
 
     - name: Run Benchmark
-      working-directory: ${{runner.workspace}}
-      run: make run-benchmark
+      working-directory: ${{runner.workspace}}/build/benchmark
+      run: make benchmark
