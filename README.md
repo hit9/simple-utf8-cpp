@@ -50,23 +50,15 @@ Run tests
 
 Install Catch2 via conan (optional, or cmake will download it automatically if missing):
 
-```
-conan install . --output-folder=build --build=missing
+```bash
+make install-debug
 ```
 
 Run tests:
 
-```
-cmake -B build -S . -DSIMPLE_UTF8_TEST=1
-cmake --build build --target runtests
-```
-
-OR using `ctest`:
-
-```
-cmake -B build -S . -DSIMPLE_UTF8_TEST=1
-cmake --build build --target tests
-ctest --test-dir ./build/tests
+```bash
+make cmake-build-test
+make run-tests
 ```
 
 Benchmark
@@ -75,8 +67,8 @@ Benchmark
 How to run benchmark:
 
 ```
-cmake -B build -S . -DSIMPLE_UTF8_TEST=1
-cmake --build build --target runbenchmark
+make cmake-build-test
+make run-benchmark
 ```
 
 Benchmark results on my computer for a 24KB random utf8 string
