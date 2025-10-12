@@ -93,7 +93,7 @@ DecodeNaive benchmark (random)                 100             2     3.5126 ms
 Links
 -----
 
-中文博客: https://writings.sh/post/utf8
+中文博客: https://hit9.dev/post/utf8
 
 License
 -------
